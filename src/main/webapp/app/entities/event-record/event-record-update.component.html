@@ -1,0 +1,50 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-event-record-heading" jhiTranslate="clickplusApp.eventRecord.home.createOrEditLabel">Create or edit a Event Record</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!eventRecord.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="eventRecord.id" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="clickplusApp.eventRecord.user" for="field_user">User</label>
+                    <select class="form-control" id="field_user" name="user" [(ngModel)]="eventRecord.user"  required>
+                        <option *ngIf="!editForm.value.user" [ngValue]="null" selected></option>
+                        <option [ngValue]="userOption.id === eventRecord.user?.id ? eventRecord.user : userOption" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.login}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.user?.dirty && editForm.controls.user?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.user?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="clickplusApp.eventRecord.eventType" for="field_eventType">Event Type</label>
+                    <select class="form-control" id="field_eventType" name="eventType" [(ngModel)]="eventRecord.eventType"  required>
+                        <option *ngIf="!editForm.value.eventType" [ngValue]="null" selected></option>
+                        <option [ngValue]="eventTypeOption.id === eventRecord.eventType?.id ? eventRecord.eventType : eventTypeOption" *ngFor="let eventTypeOption of eventtypes; trackBy: trackEventTypeById">{{eventTypeOption.name}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.eventType?.dirty && editForm.controls.eventType?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.eventType?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                    </small>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

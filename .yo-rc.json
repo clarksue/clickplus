@@ -1,0 +1,36 @@
+{
+    "generator-jhipster": {
+        "promptValues": {
+            "packageName": "com.cgbot.clickplus",
+            "nativeLanguage": "zh-cn"
+        },
+        "jhipsterVersion": "5.7.2",
+        "applicationType": "monolith",
+        "baseName": "clickplus",
+        "packageName": "com.cgbot.clickplus",
+        "packageFolder": "com/cgbot/clickplus",
+        "serverPort": "8080",
+        "authenticationType": "jwt",
+        "cacheProvider": "ehcache",
+        "enableHibernateCache": true,
+        "websocket": false,
+        "databaseType": "sql",
+        "devDatabaseType": "h2Disk",
+        "prodDatabaseType": "mysql",
+        "searchEngine": "elasticsearch",
+        "messageBroker": false,
+        "serviceDiscoveryType": false,
+        "buildTool": "gradle",
+        "enableSwaggerCodegen": false,
+        "jwtSecretKey": "MDEyNDAxYWQ5NzNhNGE0ZWUyY2VjZWI5ZWFmMjJiNGU4N2YxZjFiODM2ZjMyZWViOTA0MmIxNzg1ZjU2YWFlNDJhMzgzMDIyNTI2MTZlODUxZTExNTExNWE5YWUyODAzNDQwMmIxMWZmNzExN2NlNmI0YWE3MTc2NWNiYzFkYmU=",
+        "clientFramework": "angularX",
+        "useSass": true,
+        "clientPackageManager": "npm",
+        "testFrameworks": [],
+        "jhiPrefix": "jhi",
+        "otherModules": [],
+        "enableTranslation": true,
+        "nativeLanguage": "zh-cn",
+        "languages": ["zh-cn"]
+    }
+}

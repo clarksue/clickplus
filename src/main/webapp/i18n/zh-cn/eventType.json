@@ -1,0 +1,23 @@
+{
+    "clickplusApp": {
+        "eventType": {
+            "home": {
+                "title": "Event Types",
+                "createLabel": "创建新 Event Type",
+                "createOrEditLabel": "创建或编辑 Event Type",
+                "search": "查找 Event Type"
+            },
+            "created": "Event Type {{ param }} 创建成功",
+            "updated": "Event Type {{ param }} 更新成功",
+            "deleted": "Event Type {{ param }} 删除成功",
+            "delete": {
+                "question": "你确定要删除 Event Type {{ id }} 吗？"
+            },
+            "detail": {
+                "title": "Event Type"
+            },
+            "name": "Name",
+            "description": "Description"
+        }
+    }
+}

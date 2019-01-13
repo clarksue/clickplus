@@ -1,0 +1,33 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="eventRecord">
+            <h2><span jhiTranslate="clickplusApp.eventRecord.detail.title">Event Record</span> {{eventRecord.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="clickplusApp.eventRecord.user">User</span></dt>
+                <dd>
+                    {{eventRecord.user?.login}}
+                </dd>
+                <dt><span jhiTranslate="clickplusApp.eventRecord.eventType">Event Type</span></dt>
+                <dd>
+                    <div *ngIf="eventRecord.eventType">
+                        <a [routerLink]="['/event-type', eventRecord.eventType?.id, 'view']">{{eventRecord.eventType?.name}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/event-record', eventRecord.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

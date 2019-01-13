@@ -32,6 +32,8 @@
             <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="name"><span jhiTranslate="clickplusApp.eventType.name">Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="description"><span jhiTranslate="clickplusApp.eventType.description">Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="createdAt"><span jhiTranslate="clickplusApp.eventType.createdAt">Created At</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="updatedAt"><span jhiTranslate="clickplusApp.eventType.updatedAt">Updated At</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
@@ -40,6 +42,8 @@
                 <td><a [routerLink]="['/event-type', eventType.id, 'view' ]">{{eventType.id}}</a></td>
                 <td>{{eventType.name}}</td>
                 <td>{{eventType.description}}</td>
+                <td>{{eventType.createdAt | date:'medium'}}</td>
+                <td>{{eventType.updatedAt | date:'medium'}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"

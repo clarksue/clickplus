@@ -16,6 +16,8 @@
             "detail": {
                 "title": "Event Record"
             },
+            "createdAt": "Created At",
+            "updatedAt": "Updated At",
             "user": "User",
             "eventType": "Event Type"
         }

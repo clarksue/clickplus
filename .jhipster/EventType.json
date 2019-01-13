@@ -10,6 +10,15 @@
         {
             "fieldName": "description",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "createdAt",
+            "fieldType": "ZonedDateTime",
+            "fieldValidateRules": []
+        },
+        {
+            "fieldName": "updatedAt",
+            "fieldType": "ZonedDateTime"
         }
     ],
     "changelogDate": "20190113121705",

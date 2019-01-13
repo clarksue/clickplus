@@ -25,10 +25,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.ZoneOffset;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 
 
+import static com.cgbot.clickplus.web.rest.TestUtil.sameInstant;
 import static com.cgbot.clickplus.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
@@ -51,6 +56,12 @@ public class EventTypeResourceIntTest {
 
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
+
+    private static final ZonedDateTime DEFAULT_CREATED_AT = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    private static final ZonedDateTime UPDATED_CREATED_AT = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+
+    private static final ZonedDateTime DEFAULT_UPDATED_AT = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    private static final ZonedDateTime UPDATED_UPDATED_AT = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
     @Autowired
     private EventTypeRepository eventTypeRepository;
@@ -103,7 +114,9 @@ public class EventTypeResourceIntTest {
     public static EventType createEntity(EntityManager em) {
         EventType eventType = new EventType()
             .name(DEFAULT_NAME)
-            .description(DEFAULT_DESCRIPTION);
+            .description(DEFAULT_DESCRIPTION)
+            .createdAt(DEFAULT_CREATED_AT)
+            .updatedAt(DEFAULT_UPDATED_AT);
         return eventType;
     }
 
@@ -129,6 +142,8 @@ public class EventTypeResourceIntTest {
         EventType testEventType = eventTypeList.get(eventTypeList.size() - 1);
         assertThat(testEventType.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testEventType.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+        assertThat(testEventType.getCreatedAt()).isEqualTo(DEFAULT_CREATED_AT);
+        assertThat(testEventType.getUpdatedAt()).isEqualTo(DEFAULT_UPDATED_AT);
 
         // Validate the EventType in Elasticsearch
         verify(mockEventTypeSearchRepository, times(1)).save(testEventType);
@@ -168,7 +183,9 @@ public class EventTypeResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(eventType.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
-            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())));
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
+            .andExpect(jsonPath("$.[*].createdAt").value(hasItem(sameInstant(DEFAULT_CREATED_AT))))
+            .andExpect(jsonPath("$.[*].updatedAt").value(hasItem(sameInstant(DEFAULT_UPDATED_AT))));
     }
     
     @Test
@@ -183,7 +200,9 @@ public class EventTypeResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(eventType.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
-            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()));
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
+            .andExpect(jsonPath("$.createdAt").value(sameInstant(DEFAULT_CREATED_AT)))
+            .andExpect(jsonPath("$.updatedAt").value(sameInstant(DEFAULT_UPDATED_AT)));
     }
 
     @Test
@@ -208,7 +227,9 @@ public class EventTypeResourceIntTest {
         em.detach(updatedEventType);
         updatedEventType
             .name(UPDATED_NAME)
-            .description(UPDATED_DESCRIPTION);
+            .description(UPDATED_DESCRIPTION)
+            .createdAt(UPDATED_CREATED_AT)
+            .updatedAt(UPDATED_UPDATED_AT);
 
         restEventTypeMockMvc.perform(put("/api/event-types")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -221,6 +242,8 @@ public class EventTypeResourceIntTest {
         EventType testEventType = eventTypeList.get(eventTypeList.size() - 1);
         assertThat(testEventType.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testEventType.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testEventType.getCreatedAt()).isEqualTo(UPDATED_CREATED_AT);
+        assertThat(testEventType.getUpdatedAt()).isEqualTo(UPDATED_UPDATED_AT);
 
         // Validate the EventType in Elasticsearch
         verify(mockEventTypeSearchRepository, times(1)).save(testEventType);
@@ -281,7 +304,9 @@ public class EventTypeResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(eventType.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)));
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
+            .andExpect(jsonPath("$.[*].createdAt").value(hasItem(sameInstant(DEFAULT_CREATED_AT))))
+            .andExpect(jsonPath("$.[*].updatedAt").value(hasItem(sameInstant(DEFAULT_UPDATED_AT))));
     }
 
     @Test

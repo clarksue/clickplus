@@ -5,6 +5,14 @@
             <hr>
             <jhi-alert-error></jhi-alert-error>
             <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="clickplusApp.eventRecord.createdAt">Created At</span></dt>
+                <dd>
+                    <span>{{eventRecord.createdAt}}</span>
+                </dd>
+                <dt><span jhiTranslate="clickplusApp.eventRecord.updatedAt">Updated At</span></dt>
+                <dd>
+                    <span>{{eventRecord.updatedAt}}</span>
+                </dd>
                 <dt><span jhiTranslate="clickplusApp.eventRecord.user">User</span></dt>
                 <dd>
                     {{eventRecord.user?.login}}

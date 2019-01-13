@@ -23,7 +23,16 @@
             "otherEntityField": "name"
         }
     ],
-    "fields": [],
+    "fields": [
+        {
+            "fieldName": "createdAt",
+            "fieldType": "ZonedDateTime"
+        },
+        {
+            "fieldName": "updatedAt",
+            "fieldType": "ZonedDateTime"
+        }
+    ],
     "changelogDate": "20190113121902",
     "dto": "no",
     "searchEngine": "elasticsearch",

@@ -30,6 +30,8 @@
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
             <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="createdAt"><span jhiTranslate="clickplusApp.eventRecord.createdAt">Created At</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="updatedAt"><span jhiTranslate="clickplusApp.eventRecord.updatedAt">Updated At</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="user.login"><span jhiTranslate="clickplusApp.eventRecord.user">User</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="eventType.name"><span jhiTranslate="clickplusApp.eventRecord.eventType">Event Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
@@ -38,6 +40,8 @@
             <tbody>
             <tr *ngFor="let eventRecord of eventRecords ;trackBy: trackId">
                 <td><a [routerLink]="['/event-record', eventRecord.id, 'view' ]">{{eventRecord.id}}</a></td>
+                <td>{{eventRecord.createdAt | date:'medium'}}</td>
+                <td>{{eventRecord.updatedAt | date:'medium'}}</td>
                 <td>
                     {{eventRecord.user?.login}}
                 </td>

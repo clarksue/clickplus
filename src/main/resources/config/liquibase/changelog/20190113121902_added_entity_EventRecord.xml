@@ -22,6 +22,14 @@
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
+            <column name="created_at" type="datetime">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="updated_at" type="datetime">
+                <constraints nullable="true" />
+            </column>
+
             <column name="user_id" type="bigint">
                 <constraints nullable="false" />
             </column>
@@ -32,11 +40,9 @@
 
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
+        <dropDefaultValue tableName="event_record" columnName="created_at" columnDataType="datetime"/>
+        <dropDefaultValue tableName="event_record" columnName="updated_at" columnDataType="datetime"/>
         
-        <sql dbms="mysql" endDelimiter=";" stripComments="true">
-        alter table event_record add column created_at timestamp not null default CURRENT_TIMESTAMP;
-        alter table event_record add column updated_at timestamp not null default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP;
-        </sql>
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
 </databaseChangeLog>

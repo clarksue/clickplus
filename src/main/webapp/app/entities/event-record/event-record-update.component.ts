@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import * as moment from 'moment';
+import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { JhiAlertService } from 'ng-jhipster';
 
 import { IEventRecord } from 'app/shared/model/event-record.model';
@@ -21,6 +23,8 @@ export class EventRecordUpdateComponent implements OnInit {
     users: IUser[];
 
     eventtypes: IEventType[];
+    createdAt: string;
+    updatedAt: string;
 
     constructor(
         protected jhiAlertService: JhiAlertService,
@@ -34,6 +38,8 @@ export class EventRecordUpdateComponent implements OnInit {
         this.isSaving = false;
         this.activatedRoute.data.subscribe(({ eventRecord }) => {
             this.eventRecord = eventRecord;
+            this.createdAt = this.eventRecord.createdAt != null ? this.eventRecord.createdAt.format(DATE_TIME_FORMAT) : null;
+            this.updatedAt = this.eventRecord.updatedAt != null ? this.eventRecord.updatedAt.format(DATE_TIME_FORMAT) : null;
         });
         this.userService.query().subscribe(
             (res: HttpResponse<IUser[]>) => {
@@ -55,6 +61,8 @@ export class EventRecordUpdateComponent implements OnInit {
 
     save() {
         this.isSaving = true;
+        this.eventRecord.createdAt = this.createdAt != null ? moment(this.createdAt, DATE_TIME_FORMAT) : null;
+        this.eventRecord.updatedAt = this.updatedAt != null ? moment(this.updatedAt, DATE_TIME_FORMAT) : null;
         if (this.eventRecord.id !== undefined) {
             this.subscribeToSaveResponse(this.eventRecordService.update(this.eventRecord));
         } else {

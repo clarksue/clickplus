@@ -30,13 +30,18 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="created_at" type="datetime">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="updated_at" type="datetime">
+                <constraints nullable="true" />
+            </column>
+
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
-        
-        <sql dbms="mysql" endDelimiter=";" stripComments="true">
-        alter table event_type add column created_at timestamp not null default CURRENT_TIMESTAMP;
-        alter table event_type add column updated_at timestamp not null default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP;
-        </sql>
+        <dropDefaultValue tableName="event_type" columnName="created_at" columnDataType="datetime"/>
+        <dropDefaultValue tableName="event_type" columnName="updated_at" columnDataType="datetime"/>
         
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->

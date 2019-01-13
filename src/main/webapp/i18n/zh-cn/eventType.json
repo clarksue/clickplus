@@ -17,7 +17,9 @@
                 "title": "Event Type"
             },
             "name": "Name",
-            "description": "Description"
+            "description": "Description",
+            "createdAt": "Created At",
+            "updatedAt": "Updated At"
         }
     }
 }

@@ -27,10 +27,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.ZoneOffset;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 
 
+import static com.cgbot.clickplus.web.rest.TestUtil.sameInstant;
 import static com.cgbot.clickplus.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
@@ -47,6 +52,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ClickplusApp.class)
 public class EventRecordResourceIntTest {
+
+    private static final ZonedDateTime DEFAULT_CREATED_AT = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    private static final ZonedDateTime UPDATED_CREATED_AT = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+
+    private static final ZonedDateTime DEFAULT_UPDATED_AT = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    private static final ZonedDateTime UPDATED_UPDATED_AT = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
     @Autowired
     private EventRecordRepository eventRecordRepository;
@@ -97,7 +108,9 @@ public class EventRecordResourceIntTest {
      * if they test an entity which requires the current entity.
      */
     public static EventRecord createEntity(EntityManager em) {
-        EventRecord eventRecord = new EventRecord();
+        EventRecord eventRecord = new EventRecord()
+            .createdAt(DEFAULT_CREATED_AT)
+            .updatedAt(DEFAULT_UPDATED_AT);
         // Add required entity
         User user = UserResourceIntTest.createEntity(em);
         em.persist(user);
@@ -131,6 +144,8 @@ public class EventRecordResourceIntTest {
         List<EventRecord> eventRecordList = eventRecordRepository.findAll();
         assertThat(eventRecordList).hasSize(databaseSizeBeforeCreate + 1);
         EventRecord testEventRecord = eventRecordList.get(eventRecordList.size() - 1);
+        assertThat(testEventRecord.getCreatedAt()).isEqualTo(DEFAULT_CREATED_AT);
+        assertThat(testEventRecord.getUpdatedAt()).isEqualTo(DEFAULT_UPDATED_AT);
 
         // Validate the EventRecord in Elasticsearch
         verify(mockEventRecordSearchRepository, times(1)).save(testEventRecord);
@@ -168,7 +183,9 @@ public class EventRecordResourceIntTest {
         restEventRecordMockMvc.perform(get("/api/event-records?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(eventRecord.getId().intValue())));
+            .andExpect(jsonPath("$.[*].id").value(hasItem(eventRecord.getId().intValue())))
+            .andExpect(jsonPath("$.[*].createdAt").value(hasItem(sameInstant(DEFAULT_CREATED_AT))))
+            .andExpect(jsonPath("$.[*].updatedAt").value(hasItem(sameInstant(DEFAULT_UPDATED_AT))));
     }
     
     @Test
@@ -181,7 +198,9 @@ public class EventRecordResourceIntTest {
         restEventRecordMockMvc.perform(get("/api/event-records/{id}", eventRecord.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(eventRecord.getId().intValue()));
+            .andExpect(jsonPath("$.id").value(eventRecord.getId().intValue()))
+            .andExpect(jsonPath("$.createdAt").value(sameInstant(DEFAULT_CREATED_AT)))
+            .andExpect(jsonPath("$.updatedAt").value(sameInstant(DEFAULT_UPDATED_AT)));
     }
 
     @Test
@@ -204,6 +223,9 @@ public class EventRecordResourceIntTest {
         EventRecord updatedEventRecord = eventRecordRepository.findById(eventRecord.getId()).get();
         // Disconnect from session so that the updates on updatedEventRecord are not directly saved in db
         em.detach(updatedEventRecord);
+        updatedEventRecord
+            .createdAt(UPDATED_CREATED_AT)
+            .updatedAt(UPDATED_UPDATED_AT);
 
         restEventRecordMockMvc.perform(put("/api/event-records")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -214,6 +236,8 @@ public class EventRecordResourceIntTest {
         List<EventRecord> eventRecordList = eventRecordRepository.findAll();
         assertThat(eventRecordList).hasSize(databaseSizeBeforeUpdate);
         EventRecord testEventRecord = eventRecordList.get(eventRecordList.size() - 1);
+        assertThat(testEventRecord.getCreatedAt()).isEqualTo(UPDATED_CREATED_AT);
+        assertThat(testEventRecord.getUpdatedAt()).isEqualTo(UPDATED_UPDATED_AT);
 
         // Validate the EventRecord in Elasticsearch
         verify(mockEventRecordSearchRepository, times(1)).save(testEventRecord);
@@ -272,7 +296,9 @@ public class EventRecordResourceIntTest {
         restEventRecordMockMvc.perform(get("/api/_search/event-records?query=id:" + eventRecord.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(eventRecord.getId().intValue())));
+            .andExpect(jsonPath("$.[*].id").value(hasItem(eventRecord.getId().intValue())))
+            .andExpect(jsonPath("$.[*].createdAt").value(hasItem(sameInstant(DEFAULT_CREATED_AT))))
+            .andExpect(jsonPath("$.[*].updatedAt").value(hasItem(sameInstant(DEFAULT_UPDATED_AT))));
     }
 
     @Test

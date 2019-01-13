@@ -33,6 +33,10 @@
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
         
+        <sql dbms="mysql" endDelimiter=";" stripComments="true">
+        alter table event_record add column created_at timestamp not null default CURRENT_TIMESTAMP;
+        alter table event_record add column updated_at timestamp not null default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP;
+        </sql>
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
 </databaseChangeLog>

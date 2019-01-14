@@ -3,6 +3,7 @@ package com.cgbot.clickplus.web.rest;
 import com.cgbot.clickplus.ClickplusApp;
 
 import com.cgbot.clickplus.domain.EventType;
+import com.cgbot.clickplus.domain.User;
 import com.cgbot.clickplus.repository.EventTypeRepository;
 import com.cgbot.clickplus.repository.search.EventTypeSearchRepository;
 import com.cgbot.clickplus.web.rest.errors.ExceptionTranslator;
@@ -117,6 +118,11 @@ public class EventTypeResourceIntTest {
             .description(DEFAULT_DESCRIPTION)
             .createdAt(DEFAULT_CREATED_AT)
             .updatedAt(DEFAULT_UPDATED_AT);
+        // Add required entity
+        User user = UserResourceIntTest.createEntity(em);
+        em.persist(user);
+        em.flush();
+        eventType.setUser(user);
         return eventType;
     }
 

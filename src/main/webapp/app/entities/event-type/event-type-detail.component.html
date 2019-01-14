@@ -21,6 +21,10 @@
                 <dd>
                     <span>{{eventType.updatedAt}}</span>
                 </dd>
+                <dt><span jhiTranslate="clickplusApp.eventType.user">User</span></dt>
+                <dd>
+                    {{eventType.user?.login}}
+                </dd>
             </dl>
 
             <button type="submit"

@@ -4,9 +4,11 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
+import { JhiAlertService } from 'ng-jhipster';
 
 import { IEventType } from 'app/shared/model/event-type.model';
 import { EventTypeService } from './event-type.service';
+import { IUser, UserService } from 'app/core';
 
 @Component({
     selector: 'jhi-event-type-update',
@@ -15,10 +17,17 @@ import { EventTypeService } from './event-type.service';
 export class EventTypeUpdateComponent implements OnInit {
     eventType: IEventType;
     isSaving: boolean;
+
+    users: IUser[];
     createdAt: string;
     updatedAt: string;
 
-    constructor(protected eventTypeService: EventTypeService, protected activatedRoute: ActivatedRoute) {}
+    constructor(
+        protected jhiAlertService: JhiAlertService,
+        protected eventTypeService: EventTypeService,
+        protected userService: UserService,
+        protected activatedRoute: ActivatedRoute
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -27,6 +36,12 @@ export class EventTypeUpdateComponent implements OnInit {
             this.createdAt = this.eventType.createdAt != null ? this.eventType.createdAt.format(DATE_TIME_FORMAT) : null;
             this.updatedAt = this.eventType.updatedAt != null ? this.eventType.updatedAt.format(DATE_TIME_FORMAT) : null;
         });
+        this.userService.query().subscribe(
+            (res: HttpResponse<IUser[]>) => {
+                this.users = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
     }
 
     previousState() {
@@ -55,5 +70,13 @@ export class EventTypeUpdateComponent implements OnInit {
 
     protected onSaveError() {
         this.isSaving = false;
+    }
+
+    protected onError(errorMessage: string) {
+        this.jhiAlertService.error(errorMessage, null, null);
+    }
+
+    trackUserById(index: number, item: IUser) {
+        return item.id;
     }
 }

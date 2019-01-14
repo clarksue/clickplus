@@ -34,6 +34,7 @@
             <th jhiSortBy="description"><span jhiTranslate="clickplusApp.eventType.description">Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="createdAt"><span jhiTranslate="clickplusApp.eventType.createdAt">Created At</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="updatedAt"><span jhiTranslate="clickplusApp.eventType.updatedAt">Updated At</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="user.login"><span jhiTranslate="clickplusApp.eventType.user">User</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
@@ -44,6 +45,9 @@
                 <td>{{eventType.description}}</td>
                 <td>{{eventType.createdAt | date:'medium'}}</td>
                 <td>{{eventType.updatedAt | date:'medium'}}</td>
+                <td>
+                    {{eventType.user?.login}}
+                </td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"

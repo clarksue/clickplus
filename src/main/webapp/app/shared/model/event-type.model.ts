@@ -1,4 +1,5 @@
 import { Moment } from 'moment';
+import { IUser } from 'app/core/user/user.model';
 
 export interface IEventType {
     id?: number;
@@ -6,6 +7,7 @@ export interface IEventType {
     description?: string;
     createdAt?: Moment;
     updatedAt?: Moment;
+    user?: IUser;
 }
 
 export class EventType implements IEventType {
@@ -14,6 +16,7 @@ export class EventType implements IEventType {
         public name?: string,
         public description?: string,
         public createdAt?: Moment,
-        public updatedAt?: Moment
+        public updatedAt?: Moment,
+        public user?: IUser
     ) {}
 }

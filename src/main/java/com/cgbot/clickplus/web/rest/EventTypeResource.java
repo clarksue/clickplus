@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -56,7 +57,7 @@ public class EventTypeResource {
      */
     @PostMapping("/event-types")
     @Timed
-    public ResponseEntity<EventType> createEventType(@RequestBody EventType eventType) throws URISyntaxException {
+    public ResponseEntity<EventType> createEventType(@Valid @RequestBody EventType eventType) throws URISyntaxException {
         log.debug("REST request to save EventType : {}", eventType);
         if (eventType.getId() != null) {
             throw new BadRequestAlertException("A new eventType cannot already have an ID", ENTITY_NAME, "idexists");
@@ -79,7 +80,7 @@ public class EventTypeResource {
      */
     @PutMapping("/event-types")
     @Timed
-    public ResponseEntity<EventType> updateEventType(@RequestBody EventType eventType) throws URISyntaxException {
+    public ResponseEntity<EventType> updateEventType(@Valid @RequestBody EventType eventType) throws URISyntaxException {
         log.debug("REST request to update EventType : {}", eventType);
         if (eventType.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");

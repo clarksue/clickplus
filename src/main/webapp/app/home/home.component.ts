@@ -3,6 +3,7 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { LoginModalService, AccountService, Account } from 'app/core';
+import { IEventType } from 'app/shared/model/event-type.model';
 
 @Component({
     selector: 'jhi-home',
@@ -12,6 +13,7 @@ import { LoginModalService, AccountService, Account } from 'app/core';
 export class HomeComponent implements OnInit {
     account: Account;
     modalRef: NgbModalRef;
+    eventTypes: IEventType[];
 
     constructor(
         private accountService: AccountService,

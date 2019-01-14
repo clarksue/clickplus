@@ -2,6 +2,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { ClickplusSharedModule } from 'app/shared';
+import { ClickplusAdminModule } from 'app/admin/admin.module';
 import {
     EventTypeComponent,
     EventTypeDetailComponent,
@@ -15,7 +16,7 @@ import {
 const ENTITY_STATES = [...eventTypeRoute, ...eventTypePopupRoute];
 
 @NgModule({
-    imports: [ClickplusSharedModule, RouterModule.forChild(ENTITY_STATES)],
+    imports: [ClickplusSharedModule, ClickplusAdminModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         EventTypeComponent,
         EventTypeDetailComponent,

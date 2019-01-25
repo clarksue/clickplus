@@ -106,6 +106,15 @@ public class EventTypeResource {
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/event-types");
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
+    
+    @GetMapping("/event-types/login-user")
+    @Timed
+    public ResponseEntity<List<EventType>> getLoginUserAllEventTypes(Pageable pageable) {
+        log.debug("REST request to get a page of EventTypes created by login user");
+        Page<EventType> page = eventTypeRepository.findByUserIsCurrentUser(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/event-types/login-user");
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
 
     /**
      * GET  /event-types/:id : get the "id" eventType.

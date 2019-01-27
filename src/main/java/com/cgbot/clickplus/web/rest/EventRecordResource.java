@@ -2,8 +2,12 @@ package com.cgbot.clickplus.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.cgbot.clickplus.domain.EventRecord;
+import com.cgbot.clickplus.domain.EventType;
+import com.cgbot.clickplus.domain.User;
 import com.cgbot.clickplus.repository.EventRecordRepository;
+import com.cgbot.clickplus.repository.EventTypeRepository;
 import com.cgbot.clickplus.repository.search.EventRecordSearchRepository;
+import com.cgbot.clickplus.service.UserService;
 import com.cgbot.clickplus.web.rest.errors.BadRequestAlertException;
 import com.cgbot.clickplus.web.rest.util.HeaderUtil;
 import com.cgbot.clickplus.web.rest.util.PaginationUtil;
@@ -20,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -42,10 +46,17 @@ public class EventRecordResource {
     private final EventRecordRepository eventRecordRepository;
 
     private final EventRecordSearchRepository eventRecordSearchRepository;
+    
+    private final EventTypeRepository eventTypeRepository;
+    
+    private final UserService userService;
 
-    public EventRecordResource(EventRecordRepository eventRecordRepository, EventRecordSearchRepository eventRecordSearchRepository) {
+    public EventRecordResource(EventRecordRepository eventRecordRepository, EventRecordSearchRepository eventRecordSearchRepository,
+    		EventTypeRepository eventTypeRepository, UserService userService) {
         this.eventRecordRepository = eventRecordRepository;
         this.eventRecordSearchRepository = eventRecordSearchRepository;
+        this.eventTypeRepository = eventTypeRepository;
+        this.userService = userService;
     }
 
     /**
@@ -69,6 +80,30 @@ public class EventRecordResource {
             .body(result);
     }
 
+    @PostMapping("/event-records/{id}")
+    @Timed
+    public ResponseEntity<EventRecord> createEventRecord(@PathVariable Long id) throws URISyntaxException {
+        log.debug("REST request to save EventRecord of type : {} for login user", id);
+        Optional<EventType> eventType = eventTypeRepository.findById(id);
+        if (eventType.isPresent() == false) {
+        	throw new BadRequestAlertException("type id not found", ENTITY_NAME, "notypeid");
+        }
+        Optional<User> user = userService.getUserWithAuthorities();
+        if (user.isPresent() == false) {
+        	throw new BadRequestAlertException("user not login", ENTITY_NAME, "notlogin");
+        }
+        EventRecord eventRecord = new EventRecord();
+        eventRecord.setUser(user.get());
+        eventRecord.setEventType(eventType.get());
+        eventRecord.setCreatedAt(ZonedDateTime.now());
+        eventRecord.setUpdatedAt(eventRecord.getCreatedAt());
+        EventRecord result = eventRecordRepository.save(eventRecord);
+        eventRecordSearchRepository.save(result);
+        return ResponseEntity.created(new URI("/api/event-records/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+            .body(result);
+    }
+    
     /**
      * PUT  /event-records : Updates an existing eventRecord.
      *

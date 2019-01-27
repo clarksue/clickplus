@@ -2,14 +2,17 @@ package com.cgbot.clickplus.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.cgbot.clickplus.domain.EventType;
+import com.cgbot.clickplus.domain.User;
 import com.cgbot.clickplus.repository.EventTypeRepository;
 import com.cgbot.clickplus.repository.search.EventTypeSearchRepository;
+import com.cgbot.clickplus.service.UserService;
 import com.cgbot.clickplus.web.rest.errors.BadRequestAlertException;
 import com.cgbot.clickplus.web.rest.util.HeaderUtil;
 import com.cgbot.clickplus.web.rest.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -42,10 +45,14 @@ public class EventTypeResource {
     private final EventTypeRepository eventTypeRepository;
 
     private final EventTypeSearchRepository eventTypeSearchRepository;
+    
+    private final UserService userService;
 
-    public EventTypeResource(EventTypeRepository eventTypeRepository, EventTypeSearchRepository eventTypeSearchRepository) {
+    public EventTypeResource(EventTypeRepository eventTypeRepository, EventTypeSearchRepository eventTypeSearchRepository,
+    		UserService userService) {
         this.eventTypeRepository = eventTypeRepository;
         this.eventTypeSearchRepository = eventTypeSearchRepository;
+        this.userService = userService;
     }
 
     /**
@@ -69,6 +76,25 @@ public class EventTypeResource {
             .body(result);
     }
 
+    @PostMapping("/event-types/login-user")
+    @Timed
+    public ResponseEntity<EventType> createLoginUserEventType(@Valid @RequestBody EventType eventType) throws URISyntaxException {
+        log.debug("REST request to save EventType : {} for login user", eventType);
+        if (eventType.getId() != null) {
+            throw new BadRequestAlertException("A new eventType cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+        Optional<User> optional = userService.getUserWithAuthorities();
+        if (!optional.isPresent()) {
+        	throw new BadRequestAlertException("user not login", ENTITY_NAME, "notlogin");
+        }
+        eventType.setUser(optional.get());
+        EventType result = eventTypeRepository.save(eventType);
+        eventTypeSearchRepository.save(result);
+        return ResponseEntity.created(new URI("/api/event-types/login-user" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+            .body(result);
+    }
+    
     /**
      * PUT  /event-types : Updates an existing eventType.
      *

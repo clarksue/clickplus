@@ -26,6 +26,12 @@ export class EventRecordService {
             .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
+    createByTypeId(id: number): Observable<EntityResponseType> {
+        return this.http
+            .post<IEventRecord>(`${this.resourceUrl}/${id}`, {}, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+    }
+
     update(eventRecord: IEventRecord): Observable<EntityResponseType> {
         const copy = this.convertDateFromClient(eventRecord);
         return this.http

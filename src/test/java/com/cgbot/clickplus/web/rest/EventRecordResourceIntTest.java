@@ -6,7 +6,9 @@ import com.cgbot.clickplus.domain.EventRecord;
 import com.cgbot.clickplus.domain.User;
 import com.cgbot.clickplus.domain.EventType;
 import com.cgbot.clickplus.repository.EventRecordRepository;
+import com.cgbot.clickplus.repository.EventTypeRepository;
 import com.cgbot.clickplus.repository.search.EventRecordSearchRepository;
+import com.cgbot.clickplus.service.UserService;
 import com.cgbot.clickplus.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -69,6 +71,12 @@ public class EventRecordResourceIntTest {
      */
     @Autowired
     private EventRecordSearchRepository mockEventRecordSearchRepository;
+    
+    @Autowired
+    private EventTypeRepository eventTypeRepository;
+    
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -92,7 +100,8 @@ public class EventRecordResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final EventRecordResource eventRecordResource = new EventRecordResource(eventRecordRepository, mockEventRecordSearchRepository);
+        final EventRecordResource eventRecordResource = new EventRecordResource(eventRecordRepository, mockEventRecordSearchRepository, 
+        		eventTypeRepository, userService);
         this.restEventRecordMockMvc = MockMvcBuilders.standaloneSetup(eventRecordResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

@@ -6,6 +6,7 @@ import com.cgbot.clickplus.domain.EventType;
 import com.cgbot.clickplus.domain.User;
 import com.cgbot.clickplus.repository.EventTypeRepository;
 import com.cgbot.clickplus.repository.search.EventTypeSearchRepository;
+import com.cgbot.clickplus.service.UserService;
 import com.cgbot.clickplus.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -89,6 +90,9 @@ public class EventTypeResourceIntTest {
 
     @Autowired
     private Validator validator;
+    
+    @Autowired
+    private UserService userService;
 
     private MockMvc restEventTypeMockMvc;
 
@@ -97,7 +101,7 @@ public class EventTypeResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final EventTypeResource eventTypeResource = new EventTypeResource(eventTypeRepository, mockEventTypeSearchRepository);
+        final EventTypeResource eventTypeResource = new EventTypeResource(eventTypeRepository, mockEventTypeSearchRepository, userService);
         this.restEventTypeMockMvc = MockMvcBuilders.standaloneSetup(eventTypeResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

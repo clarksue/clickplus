@@ -108,6 +108,11 @@ export class HomeComponent implements OnInit {
     previousState() {
         window.history.back();
     }
+
+    trackId(index: number, item: IEventType) {
+        return item.id;
+    }
+
     protected onSaveSuccess() {
         this.isSaving = false;
         // this.previousState();

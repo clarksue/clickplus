@@ -26,6 +26,12 @@ export class EventTypeService {
             .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
+    createByName(eventTypeName: string): Observable<EntityResponseType> {
+        return this.http
+            .post<IEventType>(this.resourceUrl + '/login-user', eventTypeName, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+    }
+
     update(eventType: IEventType): Observable<EntityResponseType> {
         const copy = this.convertDateFromClient(eventType);
         return this.http

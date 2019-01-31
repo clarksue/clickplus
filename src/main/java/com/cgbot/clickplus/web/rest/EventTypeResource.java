@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -78,16 +78,17 @@ public class EventTypeResource {
 
     @PostMapping("/event-types/login-user")
     @Timed
-    public ResponseEntity<EventType> createLoginUserEventType(@Valid @RequestBody EventType eventType) throws URISyntaxException {
-        log.debug("REST request to save EventType : {} for login user", eventType);
-        if (eventType.getId() != null) {
-            throw new BadRequestAlertException("A new eventType cannot already have an ID", ENTITY_NAME, "idexists");
-        }
+    public ResponseEntity<EventType> createLoginUserEventType(@Valid @RequestBody String eventTypeName) throws URISyntaxException {
+        log.debug("REST request to save EventType : {} for login user", eventTypeName);
         Optional<User> optional = userService.getUserWithAuthorities();
         if (!optional.isPresent()) {
         	throw new BadRequestAlertException("user not login", ENTITY_NAME, "notlogin");
         }
+        EventType eventType = new EventType();
         eventType.setUser(optional.get());
+        eventType.setName(eventTypeName);
+        eventType.setCreatedAt(ZonedDateTime.now());
+        eventType.setUpdatedAt(eventType.getCreatedAt());
         EventType result = eventTypeRepository.save(eventType);
         eventTypeSearchRepository.save(result);
         return ResponseEntity.created(new URI("/api/event-types/login-user" + result.getId()))

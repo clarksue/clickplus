@@ -17,4 +17,4 @@ branches:
   - master
 script: true
 after_success:
-- sshpass -p $PASSWORD ssh -o stricthostkeychecking=no root@$IP "cd /root/clickplus && sh ./build.sh"
+- sshpass -p $PASSWORD ssh -o stricthostkeychecking=no root@$IP "cd /root/clickplus && sh ./build.sh &"

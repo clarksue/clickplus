@@ -1,3 +1,11 @@
+#!/bin/bash
+
+filepath=`echo $0`
+dirpath=`dirname $filepath`
+echo $dirpath
+cd $dirpath
+
+
 echo "`date` - build begin" >> build.log
 echo "`date` - git pull" >> build.log
 git pull >> build.log 2>&1

@@ -17,4 +17,4 @@ branches:
   - master
 script: true
 after_success:
-- curl http://$IP/clickplus
+- curl http://$IP:5010/clickplus
